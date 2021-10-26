@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDTestGame", "3dtest\TDTestGame.csproj", "{76683E06-B262-4F0A-BF29-19128F73203C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76683E06-B262-4F0A-BF29-19128F73203C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76683E06-B262-4F0A-BF29-19128F73203C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76683E06-B262-4F0A-BF29-19128F73203C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76683E06-B262-4F0A-BF29-19128F73203C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1CF40382-32D4-4F2A-943B-EEEC388F3539}
+	EndGlobalSection
+EndGlobal
