@@ -79,28 +79,38 @@ namespace TDTestGame {
             // Move camera checks
             if(Keyboard.GetState().IsKeyDown(Keys.Left)) {
 
-                cam.MoveCam(new Vector3(-1f, 0f, 0f));
+                triangleObjects[1].MoveObject(new Vector3(-1f, 0f, 0f));
+
+                //cam.MoveCam(new Vector3(-1f, 0f, 0f));
                 //cam.MoveTarget(new Vector3(-1f, 0f, 0f));
             }
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.Right)) {
 
-                cam.MoveCam(new Vector3(1f, 0f, 0f));
+                triangleObjects[1].MoveObject(new Vector3(1f, 0f, 0f));
+
+                //cam.MoveCam(new Vector3(1f, 0f, 0f));
                 //cam.MoveTarget(new Vector3(1f, 0f, 0f));
             }
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.Up)) {
 
-                cam.MoveCam(new Vector3(0f, -1f, 0f));
+                triangleObjects[0].RotateObject(1, 1f);
+                triangleObjects[1].RotateObject(0, 1f);
+
+                //cam.MoveCam(new Vector3(0f, -1f, 0f));
                 //cam.MoveTarget(new Vector3(0f, -1f, 0f));
             }
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.Down)) {
 
-                cam.MoveCam(new Vector3(0f, 1f, 0f));
+                triangleObjects[0].RotateObject(1, -1f);
+                triangleObjects[1].RotateObject(0, -1f);
+
+                //cam.MoveCam(new Vector3(0f, 1f, 0f));
                 //cam.MoveTarget(new Vector3(0f, 1f, 0f));
             }
 
