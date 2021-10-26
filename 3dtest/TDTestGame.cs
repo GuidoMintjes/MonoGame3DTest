@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace TDTestGame {
@@ -23,12 +24,9 @@ namespace TDTestGame {
                     // Vertices are stored
 
 
-        Triangle triangle;
-
-        public int totalVertices;
-
-
         List<Triangle> triangleObjects = new List<Triangle>();
+
+        public static Random random = new Random();
 
 
         public TDTestGame() {
@@ -38,6 +36,18 @@ namespace TDTestGame {
         }
 
         protected override void Initialize() {
+            
+            // Unlock fps
+            _graphics.SynchronizeWithVerticalRetrace = false;
+            IsFixedTimeStep = false;
+
+            // Set window size
+            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.PreferredBackBufferWidth = 1280;
+
+            _graphics.ApplyChanges();
+
+
 
             cam = new Camera(GraphicsDevice.Viewport.AspectRatio);
             world = new World(cam.camTarget);
@@ -50,16 +60,16 @@ namespace TDTestGame {
             viewEffect.VertexColorEnabled = true;
 
 
-            triangle = new Triangle(1f, GraphicsDevice, new Vector3(10f, 0f, 0f));
-            Triangle triangle2 = new Triangle(1f, GraphicsDevice, new Vector3(-100f, 0f, 0f));
-            
-            triangleObjects.Add(triangle);
-            triangleObjects.Add(triangle2);
+            // Add some triangles!
+            for (int i = -3000; i <= 3000; i+=200) {
 
+                for (int j = -3000; j <= 3000; j+=200) {
 
-            foreach (Triangle triangle in triangleObjects) {
+                    Triangle triangle = new Triangle(random.Next(80, 120) / 100f, GraphicsDevice,
+                    new Vector3(i, random.Next(-500, 500), j), random.Next(0, 3));
 
-                totalVertices += triangle.vertices;
+                    triangleObjects.Add(triangle);
+                }
             }
 
 
@@ -79,39 +89,25 @@ namespace TDTestGame {
             // Move camera checks
             if(Keyboard.GetState().IsKeyDown(Keys.Left)) {
 
-                triangleObjects[1].MoveObject(new Vector3(-1f, 0f, 0f));
-
-                //cam.MoveCam(new Vector3(-1f, 0f, 0f));
-                //cam.MoveTarget(new Vector3(-1f, 0f, 0f));
+                cam.RotateCam(100f * (float)gameTime.ElapsedGameTime.TotalSeconds);
             }
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.Right)) {
 
-                triangleObjects[1].MoveObject(new Vector3(1f, 0f, 0f));
-
-                //cam.MoveCam(new Vector3(1f, 0f, 0f));
-                //cam.MoveTarget(new Vector3(1f, 0f, 0f));
+                cam.RotateCam(-100f * (float)gameTime.ElapsedGameTime.TotalSeconds);
             }
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.Up)) {
 
-                triangleObjects[0].RotateObject(1, 1f);
-                triangleObjects[1].RotateObject(0, 1f);
-
-                //cam.MoveCam(new Vector3(0f, -1f, 0f));
-                //cam.MoveTarget(new Vector3(0f, -1f, 0f));
+                
             }
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.Down)) {
 
-                triangleObjects[0].RotateObject(1, -1f);
-                triangleObjects[1].RotateObject(0, -1f);
-
-                //cam.MoveCam(new Vector3(0f, 1f, 0f));
-                //cam.MoveTarget(new Vector3(0f, 1f, 0f));
+                
             }
 
 
@@ -142,6 +138,16 @@ namespace TDTestGame {
 
             // Render/handle camera actually
             cam.CreateLookAt();
+
+
+            foreach (Triangle triangle in triangleObjects) {
+
+                triangle.RotateObject(triangle.RotateAxis, random.Next(-1000, 100) *
+                    (float)gameTime.ElapsedGameTime.TotalSeconds);
+            }
+
+
+            //cam.camTarget = triangleObjects[random.Next(triangleObjects.Count)].position;
 
 
             base.Update(gameTime);

@@ -15,8 +15,10 @@ namespace TDTestGame {
 
         public VertexBuffer buffer;
 
+        public int RotateAxis;
 
-        public Triangle(float size, GraphicsDevice graphicsDevice, Vector3 pos) {
+
+        public Triangle(float size, GraphicsDevice graphicsDevice, Vector3 pos, int axis) {
 
             // Create the triangles
             triangle = new VertexPositionColor[12];
@@ -44,6 +46,9 @@ namespace TDTestGame {
             position = pos;
 
             vertices += 12;
+
+
+            RotateAxis = axis;
         }
 
 

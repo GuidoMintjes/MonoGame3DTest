@@ -6,6 +6,6 @@ namespace TDTestGame {
     public static class Constants {
 
         // Used for camera
-        public const float fieldOfView = 45f;
+        public const float fieldOfView = 45;
     }
 }

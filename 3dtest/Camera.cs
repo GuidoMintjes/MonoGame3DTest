@@ -16,14 +16,14 @@ namespace TDTestGame {
 
         public Camera(float aspectRatio) {
 
-            camPos = new Vector3(0f, 0f, 100f);
+            camPos = new Vector3(0f, 0f, 1000f);
             camTarget = new Vector3(0f, 0f, 0f);     // Virtually move out of screen to look at object
 
 
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(Constants.fieldOfView),
                 aspectRatio,
-                0.01f, 1000f
+                0.01f, 10000f
             );
 
 
@@ -73,6 +73,15 @@ namespace TDTestGame {
                 camTarget,
                 Vector3.Up
             );
+        }
+
+
+        public void RotateCam(float amount) {
+
+            Matrix rotationMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(amount));
+            camTarget = Vector3.Transform(camTarget - camPos, rotationMatrix) + camPos;
+
+            //CreateLookAt();
         }
     }
 }
