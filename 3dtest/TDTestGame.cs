@@ -29,6 +29,10 @@ namespace TDTestGame {
         public static Random random = new Random();
 
 
+        float randomCamTimer = 0f;
+        float randomCamTimeStamp = 3.5f;
+
+
         public TDTestGame() {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -143,11 +147,22 @@ namespace TDTestGame {
             foreach (Triangle triangle in triangleObjects) {
 
                 triangle.RotateObject(triangle.RotateAxis, random.Next(-1000, 100) *
-                    (float)gameTime.ElapsedGameTime.TotalSeconds);
+                    (float) gameTime.ElapsedGameTime.TotalSeconds);
+
+                triangle.MoveObject(Vector3.Normalize(new Vector3(0f, 0f, 0f) - triangle.position) * 
+                    0.1f * (float) gameTime.ElapsedGameTime.TotalSeconds);
             }
 
 
-            //cam.camTarget = triangleObjects[random.Next(triangleObjects.Count)].position;
+            /*
+            randomCamTimer += (float) gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (randomCamTimer >= randomCamTimeStamp) {
+                
+                cam.camTarget = triangleObjects[random.Next(triangleObjects.Count)].position;
+                randomCamTimer = 0f;
+            }
+            */
 
 
             base.Update(gameTime);

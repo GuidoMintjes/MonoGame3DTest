@@ -16,7 +16,7 @@ namespace TDTestGame {
 
         public Camera(float aspectRatio) {
 
-            camPos = new Vector3(0f, 0f, 1000f);
+            camPos = new Vector3(0f, 0f, 500f);
             camTarget = new Vector3(0f, 0f, 0f);     // Virtually move out of screen to look at object
 
 
