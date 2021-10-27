@@ -25,6 +25,7 @@ namespace TDTestGame {
 
 
         List<Pyramid> triangleObjects = new List<Pyramid>();
+        List<Plane> planeObjects = new List<Plane>();
 
         public static Random random = new Random();
 
@@ -69,11 +70,14 @@ namespace TDTestGame {
                 for (int j = -3000; j <= 3000; j+=200) {
 
                     Pyramid triangle = new Pyramid(random.Next(80, 120) / 100f, GraphicsDevice,
-                    new Vector3(i, random.Next(-500, 500), j), random.Next(0, 3));
+                    new Vector3(i, random.Next(200, 1200), j), random.Next(0, 3));
 
                     triangleObjects.Add(triangle);
                 }
             }
+
+            Plane ground = new Plane(100f, GraphicsDevice, new Vector3(0f, -20f, 0f), 0);
+            planeObjects.Add(ground);
 
 
             base.Initialize();
@@ -208,6 +212,18 @@ namespace TDTestGame {
 
                     pass.Apply();
                     GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, triangle.vertices - 1);
+                }
+            }
+
+
+            foreach (Plane plane in planeObjects) {
+
+                GraphicsDevice.SetVertexBuffer(plane.buffer);
+
+                foreach (EffectPass pass in viewEffect.CurrentTechnique.Passes) {
+
+                    pass.Apply();
+                    GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, plane.vertices - 1);
                 }
             }
 

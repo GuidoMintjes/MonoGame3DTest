@@ -7,10 +7,8 @@ using System.Text;
 namespace TDTestGame {
     class Pyramid : GenericObject {
 
-        
 
-
-        public Pyramid(float size, GraphicsDevice graphicsDevice, Vector3 pos, int axis) : base(size, graphicsDevice, pos, axis) {
+        public Pyramid(float size, GraphicsDevice graphicsDevice, Vector3 pos, int axis) {
 
             // Create the triangles
             objectMesh = new VertexPositionColor[12];
@@ -35,12 +33,7 @@ namespace TDTestGame {
 
             MoveObject(pos);
 
-            position = pos;
-
-            vertices += 12;
-
-
-            RotateAxis = axis;
+            base.InitializeObject(pos, axis);
         }
     }
 }

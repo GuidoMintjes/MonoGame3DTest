@@ -16,9 +16,15 @@ namespace TDTestGame {
         public int RotateAxis;
 
 
-        public GenericObject(float size, GraphicsDevice graphicsDevice, Vector3 pos, int axis) {
+        protected void InitializeObject(Vector3 pos, int axis) {
 
+            position = pos;
+
+            RotateAxis = axis;
+
+            vertices += objectMesh.GetLength(0);
         }
+
 
         public void MoveObject(Vector3 pos) {
 
