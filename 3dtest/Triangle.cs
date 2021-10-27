@@ -95,7 +95,7 @@ namespace TDTestGame {
 
             for (int i = 0; i < buffer.VertexCount; i++) {
 
-                triangle[i].Position = Vector3.Transform(triangle[i].Position - position, rotationMatrix) + position;
+                triangle[i].Position = Vector3.Transform(triangle[i].Position, rotationMatrix);
             }
 
             buffer.SetData(triangle);

@@ -28,10 +28,7 @@ namespace TDTestGame {
 
         public static Random random = new Random();
 
-
-        float randomCamTimer = 0f;
-        float randomCamTimeStamp = 3.5f;
-
+        float rotSpeed = -200f;
 
         public TDTestGame() {
             _graphics = new GraphicsDeviceManager(this);
@@ -45,15 +42,17 @@ namespace TDTestGame {
             _graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = false;
 
+
             // Set window size
-            _graphics.PreferredBackBufferHeight = 720;
-            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.IsFullScreen = false;
 
             _graphics.ApplyChanges();
 
 
 
-            cam = new Camera(GraphicsDevice.Viewport.AspectRatio);
+            cam = new Camera(this, new Vector3(0f, 0f, 500f), new Vector3(0f, 0f, 0f));
             world = new World(cam.camTarget);
 
 
@@ -65,9 +64,9 @@ namespace TDTestGame {
 
 
             // Add some triangles!
-            for (int i = -3000; i <= 3000; i+=200) {
+            for (int i = -3000; i <= 3000; i+=10) {
 
-                for (int j = -3000; j <= 3000; j+=200) {
+                for (int j = -3000; j <= 3000; j+=10) {
 
                     Triangle triangle = new Triangle(random.Next(80, 120) / 100f, GraphicsDevice,
                     new Vector3(i, random.Next(-500, 500), j), random.Next(0, 3));
@@ -93,42 +92,65 @@ namespace TDTestGame {
             // Move camera checks
             if(Keyboard.GetState().IsKeyDown(Keys.Left)) {
 
-                cam.RotateCam(100f * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                cam.RotateCamHorizontal(100f * (float)gameTime.ElapsedGameTime.TotalSeconds);
+
+                //cam.camRot.Y += 2.5f * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                //cam.UpdateLookAt();
             }
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.Right)) {
 
-                cam.RotateCam(-100f * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                cam.RotateCamHorizontal(-100f * (float)gameTime.ElapsedGameTime.TotalSeconds);
             }
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.Up)) {
 
-                
+                cam.RotateCameraVertical(100f * (float)gameTime.ElapsedGameTime.TotalSeconds);
             }
 
 
             if (Keyboard.GetState().IsKeyDown(Keys.Down)) {
 
-                
+                cam.RotateCameraVertical(-100f * (float)gameTime.ElapsedGameTime.TotalSeconds);
             }
 
 
-            // Zoom camera checks
-            if (Keyboard.GetState().IsKeyDown(Keys.OemPlus)) {
+            if(Keyboard.GetState().IsKeyDown(Keys.W)) {
 
-                cam.Zoom(new Vector3(0f, 0f, 1f));
+                cam.MoveCam(Vector3.Normalize(cam.camTarget - cam.camPos) * Constants.camMoveSpeed *
+                    (float) gameTime.ElapsedGameTime.TotalSeconds);
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.OemMinus)) {
+            if (Keyboard.GetState().IsKeyDown(Keys.S)) {
 
-                cam.Zoom(new Vector3(0f, 0f, -1f));
+                cam.MoveCam(Vector3.Normalize(cam.camPos - cam.camTarget) * Constants.camMoveSpeed *
+                    (float)gameTime.ElapsedGameTime.TotalSeconds);
             }
 
+            if (Keyboard.GetState().IsKeyDown(Keys.A)) {
+
+                Matrix rotationMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(90f));
+                Vector3 tmpVec = Vector3.Transform(cam.camTarget - cam.camPos, rotationMatrix) + cam.camPos;
+                tmpVec.Y *= 0;
+
+                cam.MoveCam(Vector3.Normalize(tmpVec - cam.camPos) * Constants.camMoveSpeed *
+                    (float)gameTime.ElapsedGameTime.TotalSeconds);
+            }
+
+            if (Keyboard.GetState().IsKeyDown(Keys.D)) {
+
+                Matrix rotationMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(-90f));
+                Vector3 tmpVec = Vector3.Transform(cam.camTarget - cam.camPos, rotationMatrix) + cam.camPos;
+                tmpVec.Y *= 0;
+
+                cam.MoveCam(Vector3.Normalize(tmpVec - cam.camPos) * Constants.camMoveSpeed *
+                    (float)gameTime.ElapsedGameTime.TotalSeconds);
+            }
 
             // Toggle orbit & orbit
-            
+
             if (Keyboard.GetState().IsKeyDown(Keys.Space)) {
 
                 cam.ToggleOrbit();
@@ -140,30 +162,24 @@ namespace TDTestGame {
             }
 
 
+            if(Keyboard.GetState().IsKeyDown(Keys.F)) {
+
+                _graphics.ToggleFullScreen();
+                IsMouseVisible = !IsMouseVisible;
+            }
+
+
             // Render/handle camera actually
             cam.CreateLookAt();
 
 
             foreach (Triangle triangle in triangleObjects) {
 
-                triangle.RotateObject(triangle.RotateAxis, random.Next(-1000, 100) *
-                    (float) gameTime.ElapsedGameTime.TotalSeconds);
-
-                triangle.MoveObject(Vector3.Normalize(new Vector3(0f, 0f, 0f) - triangle.position) * 
-                    0.1f * (float) gameTime.ElapsedGameTime.TotalSeconds);
+                triangle.RotateObject(triangle.RotateAxis,
+                    rotSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds);
             }
 
-
-            /*
-            randomCamTimer += (float) gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (randomCamTimer >= randomCamTimeStamp) {
-                
-                cam.camTarget = triangleObjects[random.Next(triangleObjects.Count)].position;
-                randomCamTimer = 0f;
-            }
-            */
-
+            rotSpeed += 10f * (float) gameTime.ElapsedGameTime.TotalSeconds;
 
             base.Update(gameTime);
         }

@@ -2,9 +2,10 @@
 using Microsoft.Xna.Framework;
 
 namespace TDTestGame {
-    class Camera {
+    class Camera : GameComponent {
 
-        Vector3 camPos;
+        public Vector3 camPos;
+        public Vector3 camRot;
         public Vector3 camTarget;
 
 
@@ -14,15 +15,16 @@ namespace TDTestGame {
 
         public bool orbit { get; private set; }    // Used for rotating, panning and moving camera
 
-        public Camera(float aspectRatio) {
+        public Camera(Game game, Vector3 camPosit, Vector3 camRotat) : base(game) {
 
-            camPos = new Vector3(0f, 0f, 500f);
+            camPos = camPosit;
+            camRot = camRotat;
             camTarget = new Vector3(0f, 0f, 0f);     // Virtually move out of screen to look at object
-
+            
 
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(Constants.fieldOfView),
-                aspectRatio,
+                game.GraphicsDevice.Viewport.AspectRatio,
                 0.01f, 10000f
             );
 
@@ -38,6 +40,7 @@ namespace TDTestGame {
         public void MoveCam(Vector3 movement) {
 
             camPos += movement;
+            camTarget += movement;
         }
 
 
@@ -47,9 +50,13 @@ namespace TDTestGame {
         }
 
 
-        public void Zoom(Vector3 zoom) {
+        public void UpdateLookAt() {
 
-            MoveCam(zoom);
+            Matrix rotationMatrix = Matrix.CreateRotationX(camRot.X) * Matrix.CreateRotationY(camRot.Y);
+
+            Vector3 targetOffset = Vector3.Transform(Vector3.UnitZ, rotationMatrix);
+
+            camTarget = camPos + targetOffset;
         }
 
 
@@ -76,12 +83,17 @@ namespace TDTestGame {
         }
 
 
-        public void RotateCam(float amount) {
+        public void RotateCamHorizontal(float amount) {
 
             Matrix rotationMatrix = Matrix.CreateRotationY(MathHelper.ToRadians(amount));
             camTarget = Vector3.Transform(camTarget - camPos, rotationMatrix) + camPos;
+        }
 
-            //CreateLookAt();
+
+        public void RotateCameraVertical(float amount) {
+
+            Matrix rotationMatrix = Matrix.CreateRotationX(MathHelper.ToRadians(amount));
+            camTarget = Vector3.Transform(camTarget - camPos, rotationMatrix) + camPos;
         }
     }
 }

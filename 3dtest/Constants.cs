@@ -7,5 +7,6 @@ namespace TDTestGame {
 
         // Used for camera
         public const float fieldOfView = 45;
+        public const float camMoveSpeed = 350f;
     }
 }
