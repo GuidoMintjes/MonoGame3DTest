@@ -24,7 +24,7 @@ namespace TDTestGame {
                     // Vertices are stored
 
 
-        List<Triangle> triangleObjects = new List<Triangle>();
+        List<Pyramid> triangleObjects = new List<Pyramid>();
 
         public static Random random = new Random();
 
@@ -64,11 +64,11 @@ namespace TDTestGame {
 
 
             // Add some triangles!
-            for (int i = -3000; i <= 3000; i+=10) {
+            for (int i = -3000; i <= 3000; i+=200) {
 
-                for (int j = -3000; j <= 3000; j+=10) {
+                for (int j = -3000; j <= 3000; j+=200) {
 
-                    Triangle triangle = new Triangle(random.Next(80, 120) / 100f, GraphicsDevice,
+                    Pyramid triangle = new Pyramid(random.Next(80, 120) / 100f, GraphicsDevice,
                     new Vector3(i, random.Next(-500, 500), j), random.Next(0, 3));
 
                     triangleObjects.Add(triangle);
@@ -173,13 +173,13 @@ namespace TDTestGame {
             cam.CreateLookAt();
 
 
-            foreach (Triangle triangle in triangleObjects) {
+            foreach (Pyramid triangle in triangleObjects) {
 
                 triangle.RotateObject(triangle.RotateAxis,
                     rotSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds);
             }
 
-            rotSpeed += 10f * (float) gameTime.ElapsedGameTime.TotalSeconds;
+            //rotSpeed += 10f * (float) gameTime.ElapsedGameTime.TotalSeconds;
 
             base.Update(gameTime);
         }
@@ -200,7 +200,7 @@ namespace TDTestGame {
             GraphicsDevice.RasterizerState = rasterizer;
 
 
-            foreach (Triangle triangle in triangleObjects) {
+            foreach (Pyramid triangle in triangleObjects) {
 
                 GraphicsDevice.SetVertexBuffer(triangle.buffer);
 
