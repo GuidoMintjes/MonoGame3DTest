@@ -103,7 +103,7 @@ namespace TDTestGame {
 
         // Temporary physics in here
 
-        float jumpSpeed = 3000f;
+        float jumpSpeed = 30000f;
         float gravity = 5f;
         float maxForceY = 50f;
 
@@ -117,11 +117,11 @@ namespace TDTestGame {
             Console.WriteLine(grounded + " " + DateTime.Now.ToString("HH:MM:ss"));
             Console.WriteLine();
 
+            force.Y = Math.Clamp(force.Y, -maxForceY / 2, maxForceY);
 
             camPos += force;
             camTarget += force;
 
-            force.Y = Math.Clamp(force.Y, -maxForceY / 2, maxForceY) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             camPos.Y = Math.Clamp(camPos.Y, 0.1f, 10000f);
 
