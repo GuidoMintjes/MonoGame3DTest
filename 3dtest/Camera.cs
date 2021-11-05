@@ -121,7 +121,7 @@ namespace TDTestGame {
             camPos += force;
             camTarget += force;
 
-            force.Y = Math.Clamp(force.Y, -maxForceY / 2, maxForceY);
+            force.Y = Math.Clamp(force.Y, -maxForceY / 2, maxForceY) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             camPos.Y = Math.Clamp(camPos.Y, 0.1f, 10000f);
 
@@ -135,7 +135,7 @@ namespace TDTestGame {
 
             if (!grounded) {
 
-                force.Y -= gravity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                force.Y -= gravity;
 
                 shouldCheckGrounded = true;
             } else {
