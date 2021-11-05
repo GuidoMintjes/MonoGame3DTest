@@ -104,7 +104,7 @@ namespace TDTestGame {
         // Temporary physics in here
 
         float jumpSpeed = 3000f;
-        float gravity = 100f;
+        float gravity = 5f;
         float maxForceY = 50f;
 
         bool grounded = true;
