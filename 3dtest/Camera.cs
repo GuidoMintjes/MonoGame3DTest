@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace TDTestGame {
     class Camera : GameComponent {
@@ -92,8 +93,60 @@ namespace TDTestGame {
 
         public void RotateCameraVertical(float amount) {
 
-            Matrix rotationMatrix = Matrix.CreateRotationX(MathHelper.ToRadians(amount));
+            Matrix rotationMatrix = Matrix.CreateRotationZ(MathHelper.ToRadians(amount));
             camTarget = Vector3.Transform(camTarget - camPos, rotationMatrix) + camPos;
+        }
+
+
+
+
+
+        // Temporary physics in here
+
+        float jumpSpeed = 3000f;
+        float gravity = 100f;
+        float maxForceY = 50f;
+
+        bool grounded = true;
+        bool shouldCheckGrounded = false;
+
+        Vector3 force = new Vector3(0f, 0f, 0f);
+
+        public void PhysicsUpdate(GameTime gameTime, KeyboardState state) {
+
+            Console.WriteLine(grounded + " " + DateTime.Now.ToString("HH:MM:ss"));
+            Console.WriteLine();
+
+
+            camPos += force;
+            camTarget += force;
+
+            force.Y = Math.Clamp(force.Y, -maxForceY / 2, maxForceY);
+
+            camPos.Y = Math.Clamp(camPos.Y, 0.1f, 10000f);
+
+
+            if(camPos.Y<= 0.5f && shouldCheckGrounded) {
+                grounded = true;
+                shouldCheckGrounded = false;
+
+                force.Y = 0f;
+            }
+
+            if (!grounded) {
+
+                force.Y -= gravity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                shouldCheckGrounded = true;
+            } else {
+
+                if (state.IsKeyDown(Keys.Space)) {
+
+                    force.Y += jumpSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                    grounded = false;
+                }
+            }
         }
     }
 }

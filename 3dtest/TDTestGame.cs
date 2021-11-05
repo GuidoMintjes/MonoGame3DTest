@@ -20,12 +20,10 @@ namespace TDTestGame {
 
 
         // This is a triangle
-         // Position and colour of vertices that make up a triangle
-                    // Vertices are stored
+        // Position and colour of vertices that make up a triangle
+        // Vertices are stored
 
-
-        List<Pyramid> triangleObjects = new List<Pyramid>();
-        List<Plane> planeObjects = new List<Plane>();
+        List<GenericObject> objects = new List<GenericObject>();
 
         public static Random random = new Random();
 
@@ -63,7 +61,7 @@ namespace TDTestGame {
             viewEffect.LightingEnabled = false;      // Maybe false
             viewEffect.VertexColorEnabled = true;
 
-
+            
             // Add some triangles!
             for (int i = -3000; i <= 3000; i+=200) {
 
@@ -72,12 +70,12 @@ namespace TDTestGame {
                     Pyramid triangle = new Pyramid(random.Next(80, 120) / 100f, GraphicsDevice,
                     new Vector3(i, random.Next(200, 1200), j), random.Next(0, 3));
 
-                    triangleObjects.Add(triangle);
+                    objects.Add(triangle);
                 }
             }
 
             Plane ground = new Plane(100f, GraphicsDevice, new Vector3(0f, -20f, 0f), 0);
-            planeObjects.Add(ground);
+            objects.Add(ground);
 
 
             base.Initialize();
@@ -124,13 +122,13 @@ namespace TDTestGame {
             if(Keyboard.GetState().IsKeyDown(Keys.W)) {
 
                 cam.MoveCam(Vector3.Normalize(cam.camTarget - cam.camPos) * Constants.camMoveSpeed *
-                    (float) gameTime.ElapsedGameTime.TotalSeconds);
+                    (float) gameTime.ElapsedGameTime.TotalSeconds * new Vector3(1f, 0f, 1f));
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.S)) {
 
                 cam.MoveCam(Vector3.Normalize(cam.camPos - cam.camTarget) * Constants.camMoveSpeed *
-                    (float)gameTime.ElapsedGameTime.TotalSeconds);
+                    (float)gameTime.ElapsedGameTime.TotalSeconds * new Vector3(1f, 0f, 1f));
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.A)) {
@@ -154,12 +152,12 @@ namespace TDTestGame {
             }
 
             // Toggle orbit & orbit
-
+            /*
             if (Keyboard.GetState().IsKeyDown(Keys.Space)) {
 
                 cam.ToggleOrbit();
             }
-
+            */
             if (cam.orbit) {
 
                 cam.Orbit();
@@ -177,13 +175,18 @@ namespace TDTestGame {
             cam.CreateLookAt();
 
 
-            foreach (Pyramid triangle in triangleObjects) {
+            foreach (var genObject in objects) {
 
-                triangle.RotateObject(triangle.RotateAxis,
-                    rotSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                var pyramid = genObject as Pyramid;
+
+                if(pyramid != null)
+                    pyramid.RotateObject(pyramid.RotateAxis,
+                        rotSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds);
             }
 
             //rotSpeed += 10f * (float) gameTime.ElapsedGameTime.TotalSeconds;
+
+            cam.PhysicsUpdate(gameTime, Keyboard.GetState());
 
             base.Update(gameTime);
         }
@@ -204,26 +207,14 @@ namespace TDTestGame {
             GraphicsDevice.RasterizerState = rasterizer;
 
 
-            foreach (Pyramid triangle in triangleObjects) {
+            foreach (GenericObject genObject in objects) {
 
-                GraphicsDevice.SetVertexBuffer(triangle.buffer);
-
-                foreach (EffectPass pass in viewEffect.CurrentTechnique.Passes) {
-
-                    pass.Apply();
-                    GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, triangle.vertices - 1);
-                }
-            }
-
-
-            foreach (Plane plane in planeObjects) {
-
-                GraphicsDevice.SetVertexBuffer(plane.buffer);
+                GraphicsDevice.SetVertexBuffer(genObject.buffer);
 
                 foreach (EffectPass pass in viewEffect.CurrentTechnique.Passes) {
 
                     pass.Apply();
-                    GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, plane.vertices - 1);
+                    GraphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, genObject.vertices - 1);
                 }
             }
 
